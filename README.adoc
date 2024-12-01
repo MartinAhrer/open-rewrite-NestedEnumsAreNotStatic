@@ -1,0 +1,73 @@
+~~>= README
+
+
+
+[source,groovy]
+----
+    rewrite platform('org.openrewrite.recipe:rewrite-recipe-bom:2.23.1') //<1>
+    rewrite 'org.openrewrite.recipe:rewrite-static-analysis'
+----
+<.> Workaround is to use `2.23.0`.
+
+.Run rewrite
+----
+./gradlew rewriteDryRun
+----
+
+Rewrite will damage almost all non Java files prepending `~~>`
+
+[source,git]
+----
+diff --git a/.gitattributes b/.gitattributes
+index 8af972c..2670cca 100644
+--- a/.gitattributes
++++ b/.gitattributes
+@@ -1,3 +1,3 @@
+-/gradlew text eol=lf
++~~>/gradlew text eol=lf
+ *.bat text eol=crlf
+ *.jar binary
+----
+
+
+.Console log
+----
+17:20:56: Executing 'rewriteDryRun'...
+
+Starting Gradle Daemon...
+Gradle Daemon started in 1 s 530 ms
+> Task :compileJava FROM-CACHE
+> Task :processResources
+> Task :classes
+> Task :compileTestJava FROM-CACHE
+
+> Task :rewriteDryRun
+Validating active recipes
+Scanning sources in project :
+Using active styles []
+All sources parsed, running active recipes: org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to src/main/resources/application.properties:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to gradlew:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to gradlew.bat:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to gradle/wrapper/gradle-wrapper.jar:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to gradle/wrapper/gradle-wrapper.properties:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to .gitattributes:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to .gitignore:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to README.adoc:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to gradlew:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to gradlew.bat:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to gradle/wrapper/gradle-wrapper.properties:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+These recipes would make changes to gradle/wrapper/gradle-wrapper.jar:
+    org.openrewrite.staticanalysis.NestedEnumsAreNotStatic
+----
